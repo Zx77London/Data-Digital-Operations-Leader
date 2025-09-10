@@ -1,0 +1,442 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Interactive CV | Data &amp; Digital Leader&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Chosen Palette: Calm Harmony --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Application Structure Plan: A single-page application with a sticky top navigation for easy access to key sections: an introduction, an interactive career timeline, a categorized skills section, and a summary of qualifications. The core of the application is the interactive timeline, which allows users to explore 25 years of experience without overwhelming scrolling. Clicking a role on the timeline populates a detail pane. This structure was chosen to transform a linear, text-heavy CV into an engaging, user-driven experience that highlights key achievements and skills thematically, which is more effective for recruiters and professional networking. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Visualization &amp; Content Choices: 1. Career Experience -&gt; Goal: Organize 25+ years of experience interactively -&gt; Viz/Method: Vertical HTML/CSS/JS Timeline -&gt; Interaction: Clicking a timeline node displays that role's details in a separate pane, avoiding a long scroll. Justification: Intuitive way to visualize a career path and encourages exploration. 2. Key Competencies -&gt; Goal: Present a dense list of skills in a digestible format -&gt; Viz/Method: Interactive HTML/Tailwind CSS Grid -&gt; Interaction: Hovering over a skill category provides a subtle visual highlight. Justification: Better visual organization than a simple list. 3. Industry Experience -&gt; Goal: Quantify experience across sectors -&gt; Viz/Method: Chart.js Bar Chart -&gt; Interaction: Tooltips on hover. Justification: Provides a quick, data-driven visual summary of a diverse background. Library: Chart.js. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Inter', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f8fafc;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #1e293b;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.timeline-item {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.3s ease;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.timeline-item.active .timeline-dot {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #0d9488;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: scale(1.5);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.timeline-item.active .timeline-date {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #0d9488;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.timeline-item:not(.active) .timeline-dot {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #94a3b8;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.timeline-content {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: none;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.timeline-content.active {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: block;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.sticky-nav {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: -webkit-sticky;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: sticky;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>top: 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>z-index: 50;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.chart-container {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-width: 600px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-left: auto;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-right: auto;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 300px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-height: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@media (min-width: 768px) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.chart-container {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>height: 350px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="antialiased"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;nav class="sticky-nav bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex items-center justify-between h-16"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="font-bold text-xl text-slate-800"&gt;Professional Portfolio&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="hidden md:block"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="ml-10 flex items-baseline space-x-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;a href="#summary" class="text-slate-600 hover:bg-teal-50 hover:text-teal-700 px-3 py-2 rounded-md text-sm font-medium"&gt;Summary&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;a href="#experience" class="text-slate-600 hover:bg-teal-50 hover:text-teal-700 px-3 py-2 rounded-md text-sm font-medium"&gt;Experience&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;a href="#skills" class="text-slate-600 hover:bg-teal-50 hover:text-teal-700 px-3 py-2 rounded-md text-sm font-medium"&gt;Skills&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;a href="#education" class="text-slate-600 hover:bg-teal-50 hover:text-teal-700 px-3 py-2 rounded-md text-sm font-medium"&gt;Qualifications&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/nav&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="summary" class="mb-16"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="text-center mb-12"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight"&gt;Data &amp; Digital Operations Leader&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600"&gt;Transforming complex data landscapes into governed, analytics-ready ecosystems.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid md:grid-cols-5 gap-8 items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="md:col-span-3 bg-white p-8 rounded-xl shadow-md border border-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-2xl font-bold text-slate-800 mb-4"&gt;Professional Summary&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-4 text-slate-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>&lt;p&gt;A strategic leader with over 25 years of experience across pharmaceuticals, biotech, manufacturing, aviation, and technology. I specialise in building trusted data foundations that transform fragmented, low-trust environments—from paper records and uncontrolled spreadsheets to disconnected systems and unstructured files—into governed, analytics-ready ecosystems.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>&lt;p&gt;I resolve root issues by closing master data gaps, embedding ownership roles, and aligning teams around clearly defined governance structures. My work enables critical functions, such as manufacturing, quality, and supply chain, to shift from data collection to data-driven decision-making. Known for uniting stakeholders and simplifying complexity, I deliver scalable, GxP-compliant impact across internal operations and partner networks, driving sustainable digital transformation through Agile and Scrum mindsets.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="md:col-span-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white p-6 rounded-xl shadow-md border border-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-4 text-center"&gt;Industry Experience Focus&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>&lt;div class="chart-container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="industryChart"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="experience" class="mb-16"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-3xl font-bold text-slate-800 mb-8 text-center"&gt;Interactive Career Timeline&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid md:grid-cols-3 gap-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="md:col-span-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="relative border-l-2 border-slate-300 ml-3 py-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div id="timeline-nav" class="space-y-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div id="experience-details" class="md:col-span-2 bg-white p-8 rounded-xl shadow-md border border-slate-200 min-h-[400px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-center text-slate-500 my-auto flex items-center justify-center h-full"&gt;Select a role from the timeline to view details.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="skills" class="mb-16"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-3xl font-bold text-slate-800 mb-8 text-center"&gt;Key Competencies&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="skills-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;section id="education"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-3xl font-bold text-slate-800 mb-8 text-center"&gt;Education &amp; Qualifications&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="grid md:grid-cols-2 gap-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-xl shadow-md border border-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-4"&gt;Education&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;ul class="space-y-2 text-slate-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;&lt;strong&gt;MSc Information Management &amp; Finance&lt;/strong&gt;, University of Westminster, UK (2001)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;&lt;strong&gt;BA (Hons) Urban Design&lt;/strong&gt;, University of Westminster, UK (2000)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-xl shadow-md border border-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-4"&gt;Certifications&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;ul class="space-y-2 text-slate-600 list-disc list-inside"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;Lean Six Sigma Black Belt&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;APICS Supply Chain Fundamentals&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;CBAP (Certified Business Analysis Professional)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;PMI-ACP (Agile Certified Practitioner)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;AgilePM® Foundation &amp; Practitioner (v3)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;ITIL Foundation&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-xl shadow-md border border-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-4"&gt;Professional Memberships&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                     </span>&lt;ul class="space-y-2 text-slate-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;International Institute of Business Analysis (IIBA)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;International Society for Pharmaceutical Engineering (ISPE)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;Association for Supply Chain Management (APICS)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;DAMA International&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white p-6 rounded-xl shadow-md border border-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold text-slate-800 mb-4"&gt;Languages&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                     </span>&lt;ul class="space-y-2 text-slate-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;English (Native)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;German (B2)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;Spanish (B1)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;li&gt;Italian (A2)&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const experienceData = [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'lonza',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>company: 'Lonza AG',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>role: 'Technical Business Analyst (Performance and Data Manager)',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: 'Jan 2025 – Apr 2025',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>summary: 'As the Technical Business Analyst, I led an enterprise reporting initiative to digitise contingent workforce management and capital expenditure (CAPEX) portfolio analytics, transitioning the organisation from fragmented spreadsheets to a structured, data-driven ecosystem.',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>points: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Impact', text: 'Enhanced workforce and cost visibility across global projects and vendors, empowering leaders with real-time insights for improved labour and vendor management.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Methodology', text: 'Designed and implemented Power BI dashboards that leveraged governed datasets and clearly defined master data fields, replacing inconsistent and siloed data sources.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Collaboration', text: 'Partnered with Procurement, PMO, Engineering, and Finance teams to define business logic, ownership roles, and data governance rules, ensuring cross-functional alignment on critical data definitions.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Result', text: 'Supported advanced scenario modelling and forecasting that improved labour planning and optimised vendor management strategy.' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'argenx',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>company: 'argenx BV',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>role: 'Principal Business Analyst (Data Analytics Platform System Owner)',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: 'Nov 2023 – Oct 2024',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>summary: 'As the system owner for the CMC Data Analytics Platform, I led a groundbreaking initiative to replace disconnected, document-driven workflows with a governed, real-time data ecosystem based on a Unified Namespace (UNS). This project delivered a tangible impact on data-driven decision-making and operational efficiency across the organisation.',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>points: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Impact', text: 'Cut analyst data wrangling time by 90%, freeing up valuable time for scientific collaboration and risk assessment.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Result', text: 'Enabled live batch campaign monitoring and early detection of process deviations, strengthening cross-functional collaboration and proactive interventions.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Methodology', text: 'Architected the platform using a data mesh-inspired approach, applying ISA-88/95 models to integrate data from seven external contract partners (CDMOs, CROs, CTLs).' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Leadership', text: 'Built and coached a cross-functional delivery team of data architects, engineers, QA leads, and business SMEs to ensure a secure, audit-ready, and GxP-compliant solution.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Compliance', text: 'Applied GAMP5 controls and V-model principles to embed traceability and lifecycle visibility into the architecture, ensuring future validation alignment.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Innovation', text: 'Designed the UNS in Snowflake to enable digital twin readiness and advanced analytics, including real-time process monitoring and the deployment of AI/ML models.' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'medela',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>company: 'medela AG',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>role: 'Senior SAP S/4HANA Consultant (Master Data &amp; Supply Chain)',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: 'Apr 2023 – Jul 2023',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>summary: 'In this role, I supported a critical SAP S/4HANA deployment by focusing on master data governance and traceability requirements within a regulated medical device and consumables environment.',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>points: [</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Impact', text: 'Improved data reliability for manufacturing and quality systems by designing and implementing governance rules and change processes for recipes, BOMs, and planning attributes.' },</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Methodology', text: 'Led targeted cleansing and harmonization of legacy master data, significantly reducing manual reconciliation efforts and boosting confidence in reporting.' },</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Collaboration', text: 'Worked with plant, quality, and IT stakeholders to align data structures for future MES integration, ensuring automated lot traceability and compliance.' },</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Result', text: 'Advised on a sustainable data ownership model and established robust documentation standards to support ongoing compliance and audit readiness.' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'komax',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>company: 'Komax AG',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>role: 'SAP S/4HANA EWM &amp; Supply Chain Consultant',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: 'Jun 2022 – Apr 2023',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>summary: 'I led the SAP S/4HANA Cloud rollout across Komax Group, applying the SAP Activate methodology and standardized processes to optimize supply chain operations.',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>points: [</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Impact', text: 'Drove agile delivery by managing backlogs, refining user stories, and coordinating testing and releases, ensuring a streamlined and efficient project lifecycle.' },</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Methodology', text: 'Configured EWM, MM, and SD modules to optimize procurement, warehousing, and sales execution, significantly improving operational efficiency.' },</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Collaboration', text: 'Facilitated design workshops and collaborated with global teams to ensure process alignment and system integration.' },</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Result', text: 'Standardized master data to improve inventory visibility, replenishment, and production scheduling across the organization.' },</p>
+<p class="p1"><span class="Apple-converted-space">                 </span>{ title: 'Leadership', text: 'Advised on data governance and architecture to support a scalable foundation for automation, traceability, and analytics.' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'roche',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>company: 'F. Hoffmann La Roche Ltd',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>role: 'Technical Business Analyst, TT Digital Transformation',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: 'Aug 2021 – Apr 2022',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>summary: 'I contributed to Roche’s global Basecamp 2.0 program, a strategic initiative to enable faster tech transfers and manufacturing harmonization through an enterprise recipe management platform.',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>points: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Impact', text: 'Strengthened digital traceability, GxP data integrity, and regulatory audit readiness by leading data lineage mapping across batch, recipe, and sample flows.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Methodology', text: 'Structured and validated CMC control data, including CPPs and CQAs, ensuring seamless integration of process data, material hierarchies, and equipment parameters.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Collaboration', text: 'Coordinated validation and User Acceptance Testing (UAT) cycles across MES, LIMS, and eBR touchpoints, ensuring end-to-end data flow and exception handling.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Leadership', text: 'Defined federated data ownership roles across Quality, IT, and Manufacturing, establishing a sustainable governance model for master data and process specifications.' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'lufthansa',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>company: 'Lufthansa Group',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>role: 'Business Analyst, Revenue Management Pricing &amp; Digital Solutions',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: 'Jun 2019 – Aug 2021',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>summary: 'I supported the "dot com" initiative to drive direct-to-customer sales by helping to replace legacy distribution systems with modern, data-driven solutions.',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>points: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Impact', text: 'Designed and validated AI-powered dynamic pricing algorithms that leveraged market, online behavior, and competitor data to optimize commercial offers.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Methodology', text: 'Built a unified business glossary and KPI definitions, promoting consistent reporting and analysis across Revenue Management, Strategy, and Finance teams.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Collaboration', text: 'Bridged the gap between IT and business stakeholders to ensure that analytics solutions were directly aligned with direct sales and digital goals.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Result', text: 'Managed UAT and quantified the savings and offer improvements delivered by the new NDC platforms, demonstrating a clear return on investment.' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'msd',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>company: 'MSD (Merck Sharp &amp; Dohme)',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>role: 'Senior Specialist, External Manufacturing &amp; Inventory Management',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: 'Feb 2015 – Apr 2019',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>summary: 'In this role, I managed planning, manufacturing, and inventory operations across multiple external sites, ensuring timely production and accurate inventory management.',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>points: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Impact', text: 'Reduced inventory quality variation (IQV) below 20% by identifying, analyzing, and resolving issues through a structured root cause analysis process.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Methodology', text: 'Automated IQV data analytics and inventory reconciliation using Tibco Spotfire, enhancing process efficiency and ensuring unit-based inventory accuracy at CMOs.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Result', text: 'Introduced preventative measures by integrating automated provisions and accruals into the monthly S&amp;OP process, improving inventory accuracy and financial reporting.' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ title: 'Collaboration', text: 'Facilitated cross-functional collaboration between global teams to ensure seamless IQV management and consistent inventory reporting.' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>]</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'earlier',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>company: 'Earlier Career',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>role: 'Consulting Roles',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>date: '2001 – 2015',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>summary: 'I applied my skills as an independent consultant and through firms like Hewlett Packard and TATA Consultancy Services, leading complex ERP transformations and data improvement initiatives across diverse sectors including finance, aviation, and telecoms. My work included multi-country system rollouts, master data remediation, reporting automation, and business process redesign.',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>points: []</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const skillsData = [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ category: 'SAP/ERP Transformation', skills: 'SAP S/4HANA (MM, SD, EWM, Fiori), Enterprise Data Architecture, Cloud Platforms (Snowflake, Azure, Databricks).' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ category: 'Data Strategy &amp; Governance', skills: 'Master Data, Unified Namespace, ISA-95, Federated Ownership Models, Data Lineage.' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ category: 'Compliance &amp; Quality', skills: 'GxP-compliant Architecture, Validation, Lifecycle Traceability (CSV, GAMP5), CMC, Quality, and Manufacturing Data Integration (MES, LIMS, SAP).' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ category: 'Business Analysis &amp; Process Design', skills: 'BPMN, UML, Value Stream Mapping, Business Analytics, Lean Six Sigma.' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ category: 'Project &amp; Change Management', skills: 'Agile, Scrum, Organisational Change Management, Training Delivery, User Onboarding, End-user Communications.' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ category: 'Stakeholder &amp; Vendor Management', skills: 'Cross-functional Stakeholder Engagement, Leadership Across Global Teams, External Partner and Contract Oversight (CDMO, CRO, CTL).' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ category: 'Analytics &amp; Programming', skills: 'Power BI, Python, R, SQL, AI/ML Readiness.' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ category: 'Risk &amp; Compliance', skills: 'Compliance, Risk Management, and Audit Readiness.' }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.addEventListener('DOMContentLoaded', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const timelineNav = document.getElementById('timeline-nav');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const experienceDetails = document.getElementById('experience-details');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const skillsGrid = document.getElementById('skills-grid');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>experienceData.forEach((exp, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const navItem = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>navItem.className = 'timeline-item relative pl-8';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>navItem.dataset.id = exp.id;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>navItem.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="timeline-dot absolute left-0 top-1.5 w-3 h-3 rounded-full transition-all duration-300"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="timeline-date text-sm font-semibold text-slate-500 mb-1"&gt;${exp.date}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h4 class="font-bold text-slate-700"&gt;${exp.company}&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-sm text-slate-500"&gt;${exp.role}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>timelineNav.appendChild(navItem);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (index === 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>navItem.classList.add('active');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>renderExperienceDetails(exp.id);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>timelineNav.addEventListener('click', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const targetItem = e.target.closest('.timeline-item');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (targetItem) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.querySelectorAll('.timeline-item').forEach(item =&gt; item.classList.remove('active'));</p>
+<p class="p1"><span class="Apple-converted-space">                </span>targetItem.classList.add('active');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>renderExperienceDetails(targetItem.dataset.id);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function renderExperienceDetails(id) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const exp = experienceData.find(e =&gt; e.id === id);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!exp) return;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>let pointsHtml = exp.points.map(p =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mt-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h5 class="font-bold text-teal-700"&gt;${p.title}:&lt;/h5&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-slate-600"&gt;${p.text}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`).join('');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>experienceDetails.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h3 class="text-2xl font-bold text-slate-800"&gt;${exp.company}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-lg font-semibold text-slate-600"&gt;${exp.role}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-sm text-slate-500 mb-4"&gt;${exp.date}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="border-t border-slate-200 pt-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="italic text-slate-600"&gt;${exp.summary}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>${pointsHtml}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>skillsData.forEach(skill =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const skillCard = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>skillCard.className = 'bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg hover:border-teal-300 transition-all duration-300';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>skillCard.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;h3 class="text-lg font-bold text-teal-800 mb-2"&gt;${skill.category}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p class="text-sm text-slate-600"&gt;${skill.skills}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>skillsGrid.appendChild(skillCard);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const ctx = document.getElementById('industryChart').getContext('2d');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const industryChart = new Chart(ctx, {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>type: 'bar',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>data: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>labels: ['Pharma/Biotech', 'Manufacturing', 'Aviation', 'Technology', 'Finance/Telecoms'],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>datasets: [{</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>label: 'Years of Experience (Approx.)',</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>data: [10, 8, 3, 5, 4],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>backgroundColor: [</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>'rgba(15, 118, 110, 0.6)',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>'rgba(13, 148, 136, 0.6)',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>'rgba(45, 212, 191, 0.6)',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>'rgba(107, 114, 128, 0.6)',</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>'rgba(156, 163, 175, 0.6)'</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>borderColor: [</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>'rgba(15, 118, 110, 1)',</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>'rgba(13, 148, 136, 1)',</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>'rgba(45, 212, 191, 1)',</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>'rgba(107, 114, 128, 1)',</p>
+<p class="p1"><span class="Apple-converted-space">                       </span>'rgba(156, 163, 175, 1)'</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>borderWidth: 1</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}]</p>
+<p class="p1"><span class="Apple-converted-space">            </span>},</p>
+<p class="p1"><span class="Apple-converted-space">            </span>options: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>responsive: true,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>maintainAspectRatio: false,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>indexAxis: 'y',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>plugins: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>legend: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>display: false</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>tooltip: {</p>
+<p class="p1"><span class="Apple-converted-space">                         </span>callbacks: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>label: function(context) {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>let label = context.dataset.label || '';</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>if (label) {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>label += ': ';</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>if (context.parsed.x !== null) {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>label += context.parsed.x + ' years';</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>return label;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>scales: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>x: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>beginAtZero: true,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>title: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>display: true,</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>text: 'Approx. Years'</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelectorAll('a[href^="#"]').forEach(anchor =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>anchor.addEventListener('click', function (e) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>e.preventDefault();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.querySelector(this.getAttribute('href')).scrollIntoView({</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>behavior: 'smooth'</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
